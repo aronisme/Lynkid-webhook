@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "zip_url": "https://euphonious-hummingbird-9ef8a8.netlify.app/geminiPrompter.zip",
   "force": false,
-  "notes": "v1.1.0: Renamed to Gemini Prompt Generator, added Groq AI support, Footage mode improvements, and UI refinements."
+  "notes": "v1.2.0: Added 'Riset' tab with Content Planner integration, new Globe icon, and auto-switching to Magic Prompt for improved workflow."
 }
