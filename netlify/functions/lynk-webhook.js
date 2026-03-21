@@ -77,11 +77,23 @@ exports.handler = async (event) => {
     }
 
     // 2. Validasi Signature
-    if (!validateLynkSignature(payload, signature, MERCHANT_KEY)) {
-        console.warn('[Lynk Webhook] Signature TIDAK valid! Request ditolak.');
+    const { ref_id, amount, message_id } = payload;
+    const dataToSign = `${ref_id}${amount}${message_id}`;
+    const computedSig = crypto.createHmac('sha256', MERCHANT_KEY).update(dataToSign).digest('hex');
+
+    if (computedSig !== signature) {
+        console.warn(`[Lynk Webhook] Signature invalid. Expected: ${computedSig}, Got: ${signature}`);
         return {
             statusCode: 403,
-            body: JSON.stringify({ error: 'Invalid signature' })
+            body: JSON.stringify({ 
+                error: 'Invalid signature', 
+                debug: {
+                    received_signature: signature,
+                    computed_signature: computedSig,
+                    data_to_sign: dataToSign,
+                    payload_keys: Object.keys(payload)
+                }
+            })
         };
     }
 

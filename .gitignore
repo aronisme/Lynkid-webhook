@@ -1,0 +1,18 @@
+# ============================================================
+# .gitignore — Sistem Update Backend
+# ============================================================
+
+# JANGAN PERNAH commit file credentials!
+.env
+*.env
+*.json.key
+
+# Service Account files
+*-firebase-adminsdk-*.json
+*serviceAccount*.json
+
+# Node modules
+node_modules/
+
+# Netlify cache
+.netlify/
