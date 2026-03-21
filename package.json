@@ -1,0 +1,8 @@
+{
+  "name": "gemini-prompter-update-server",
+  "version": "1.0.0",
+  "description": "Netlify backend for Gemini Prompt Generator extension: update server + Lynk.id webhook",
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

@@ -1,8 +1,13 @@
 [build]
   publish = "public"
+  functions = "netlify/functions"
 
 [[headers]]
   for = "/*"
   [headers.values]
     Access-Control-Allow-Origin = "*"
     Cache-Control = "no-store"
+
+# ── Webhook Lynk.id ───────────────────────────────────────────────────────────
+# Endpoint: POST https://[domain-netlify].netlify.app/.netlify/functions/lynk-webhook
+# Daftarkan URL ini di dashboard Lynk.id -> Settings -> Webhook
