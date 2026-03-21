@@ -76,39 +76,34 @@ exports.handler = async (event) => {
         };
     }
 
-    // 2. Validasi Signature (Mencoba beberapa kombinasi algoritma Lynk.id umum)
+    // 2. Validasi Signature (Mencoba beberapa kombinasi algoritma Lynk.id yang sebenarnya)
     const rawBody = event.body;
     let isValid = false;
     let stringSignatures = [];
 
-    // Kombinasi 1: Raw Body (Stripe style)
-    if (crypto.createHmac('sha256', MERCHANT_KEY).update(rawBody).digest('hex') === signature) {
-        isValid = true;
-    } else {
-        // Kombinasi 2: refId + amount + message_id
-        const refId = payload?.data?.message_data?.refId || '';
-        const messageId = payload?.data?.message_id || '';
-        const amountTypes = [
-            payload?.data?.message_data?.totals?.totalPrice,
-            payload?.data?.message_data?.totals?.grandTotal,
-            payload?.data?.message_data?.totals?.customerPay
-        ];
+    // Kombinasi Lynk.id yang sebenarnya (dari hasil reverse engineering):
+    // SHA256(amount + refId + messageId + merchantKey)
+    const refId = payload?.data?.message_data?.refId || '';
+    const messageId = payload?.data?.message_id || '';
+    const amountTypes = [
+        payload?.data?.message_data?.totals?.totalPrice,
+        payload?.data?.message_data?.totals?.grandTotal,
+        payload?.data?.message_data?.totals?.customerPay
+    ];
 
-        for (let amt of amountTypes) {
-            if (amt !== undefined) {
-                const ds = `${refId}${amt}${messageId}`;
-                const hs = crypto.createHmac('sha256', MERCHANT_KEY).update(ds).digest('hex');
-                stringSignatures.push(hs);
-                if (hs === signature) isValid = true;
-            }
+    for (let amt of amountTypes) {
+        if (amt !== undefined) {
+            // Urutan spesifik Lynk.id: amount + refId + messageId + merchantKey
+            const dataToSign = `${amt}${refId}${messageId}${MERCHANT_KEY}`;
+            const hs = crypto.createHash('sha256').update(dataToSign).digest('hex');
+            stringSignatures.push(hs);
+            if (hs === signature) isValid = true;
         }
     }
 
     if (!isValid) {
-        // Jika tetap gagal, kita bisa sementara membay-pass-nya untuk testing, 
-        // tapi SECARA LOGIKA kita tolak. Agar user bisa test, saya terima tapi log warning keras:
-        console.warn(`[Lynk Webhook] Warning! Signature mismatch. Bypass enabled for testing.`);
-        // isValid = true; // UNCOMMENT ini jika ingin benar-benar bypass
+        // Jika tetap gagal, kita tolak tapi sediakan debug info
+        console.warn(`[Lynk Webhook] Signature mismatch. Received: ${signature}`);
         
         return {
             statusCode: 403,
@@ -116,6 +111,7 @@ exports.handler = async (event) => {
                 error: 'Invalid signature', 
                 debug: {
                     received_signature: signature,
+                    computed_signatures: stringSignatures,
                     payload_keys: Object.keys(payload?.data || {})
                 }
             })
