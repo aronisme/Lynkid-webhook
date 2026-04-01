@@ -132,66 +132,79 @@
         <header>
             <h1>Privacy Policy</h1>
             <p><strong>Scraper Prompt Generator</strong></p>
-            <p>Last Updated: March 28, 2026</p>
+            <p>Last Updated: April 1, 2026</p>
         </header>
 
         <section>
-            <p>This Privacy Policy describes how the <strong>"Scraper Prompt Generator"</strong> Chrome extension (the "Extension") collects, handles, stores, and shares your information. We are committed to protecting your privacy and complying with the Chrome Web Store Developer Program Policies.</p>
+            <p>This Privacy Policy describes how the <strong>"Scraper Prompt Generator"</strong> Chrome extension (the "Extension") collects, handles, stores, and shares your data. This policy is written to strictly comply with the Google Chrome Web Store Developer Program Policies.</p>
+            <p>By using this Extension, you agree to the collection and use of information in accordance with this policy.</p>
         </section>
 
         <section>
-            <h2>1. Data Collection (What we collect)</h2>
-            <p>We collect the following types of data when you use the Extension:</p>
+            <h2>1. Data Collection (What Information We Collect)</h2>
+            <p>The Extension limits the collection of data to what is strictly necessary to provide its core functionality. We collect:</p>
             <ul>
-                <li><strong>Personal/Authentication Information:</strong> When you log in, we collect your Email Address, Name, Profile Picture, and Google User ID via Google OAuth2.</li>
-                <li><strong>Website Content (Images & Metadata):</strong> When you explicitly click "Scrape Images" or use the context menu, the Extension reads Image URLs, alt texts, dimensions, and page titles from your active tab.</li>
-                <li><strong>User-Provided Configuration:</strong> Any third-party API Keys (e.g., Gemini API Key, Groq API Key) you manually enter into the Extension's settings.</li>
-                <li><strong>Usage Statistics:</strong> We track the number of images you process specifically to manage Freemium/Premium tier limits.</li>
+                <li><strong>Website Content (Images & Metadata):</strong> We collect image URLs, alt texts, dimensions, and page titles from the active browser tab you are currently viewing. <em>This collection ONLY happens when you explicitly click "Scrape Images" or use the right-click context menu.</em></li>
+                <li><strong>Personal/Authentication Information:</strong> We collect your Email Address, Name, and Google User ID using Google's OAuth2 (chrome.identity) when you choose to log in.</li>
+                <li><strong>User-Provided Configuration:</strong> Any third-party API Keys (e.g., Gemini API Key, Groq API Key) that you manually input into the Extension's settings.</li>
+                <li><strong>Usage Statistics:</strong> We track the total number of images you process solely for the purpose of managing Freemium/Premium tier limits attached to your account.</li>
             </ul>
         </section>
 
         <section>
-            <h2>2. Data Handling (How we process your data)</h2>
-            <p>We handle your data securely to provide the Extension's core features:</p>
+            <h2>2. Data Handling (How We Handle Your Information)</h2>
+            <p>We handle your data securely and transparently:</p>
             <ul>
-                <li><strong>Image & Page Data:</strong> Handled entirely locally in your browser. When you generate a prompt, this visual data is sent directly to the selected AI provider (Google Gemini or Groq) to be analyzed. It is never routed through or processed by our own servers.</li>
-                <li><strong>API Keys:</strong> Handled securely by the Chrome browser. They are used exclusively to authenticate your requests directly with your chosen AI provider.</li>
-                <li><strong>Permissions:</strong> The Extension requires <code>host_permissions</code> for all URLs (<code>&lt;all_urls&gt;</code>) solely to enable image extraction on any website you choose to analyze. The Extension only accesses a page when you explicitly activate it on that specific tab.</li>
+                <li><strong>Browser-Level Processing:</strong> Data extraction from web pages is handled entirely locally within your browser using the <code>activeTab</code> and <code>&lt;all_urls&gt;</code> host permissions. The Extension only requests and accesses page data when you consciously initiate an action on that specific tab.</li>
+                <li><strong>API Key Usage:</strong> The third-party API keys you provide are handled exclusively to authenticate your requests directly with your chosen AI provider (Google or Groq). They are not used for any background tracking or analytics.</li>
+                <li><strong>Temporary In-Memory Handling:</strong> Extracted image data is held temporarily in the browser's memory to be displayed to you and transmitted to the AI provider.</li>
             </ul>
         </section>
 
         <section>
-            <h2>3. Data Storage (Where your data lives)</h2>
+            <h2>3. Data Storage (Where Your Data is Stored)</h2>
             <p>Our data storage practices are designed to maximize your privacy:</p>
             <ul>
                 <li><strong>Local Storage:</strong> Your third-party API Keys and Extension settings are stored strictly locally on your device using Chrome's <code>chrome.storage.local</code> API. <strong>We do not store your API keys on our servers.</strong></li>
-                <li><strong>Cloud Storage (Authentication):</strong> Your user profile (email, name) and subscription status (Freemium/Premium limits) are stored securely on Google Firebase infrastructure.</li>
-                <li><strong>Zero Retention for Media:</strong> We <strong>do not</strong> store, save, or log the images, website content, or generated AI prompts on any of our servers or databases.</li>
+                <li><strong>Cloud Storage (Authentication only):</strong> Your user profile (email, name) and subscription usage statistics are stored securely on Google Firebase infrastructure to manage your account status.</li>
+                <li><strong>Zero Retention for Scraped Media:</strong> We <strong>do NOT</strong> store, save, or log the images, website content, or generated AI prompts on any of our own servers or databases at any time.</li>
             </ul>
         </section>
 
         <section>
-            <h2>4. Data Sharing (Who we share data with)</h2>
-            <p>We strictly govern who receives your data:</p>
+            <h2>4. Data Sharing (Who We Share Your Data With)</h2>
+            <p><strong>We DO NOT sell, rent, or trade your personal information, browsing history, or scraped data to any third parties.</strong></p>
+            <p>Your data is only shared with the following necessary service providers:</p>
             <ul>
-                <li><strong>We DO NOT sell your data:</strong> We will never sell, rent, or trade your personal information, browsing history, or scraped images to any third parties for advertising or any other purpose.</li>
-                <li><strong>Third-Party Processors:</strong> To provide AI capabilities, the Extension transmits necessary data (image URLs or content) directly to the AI service you select (<strong>Google Gemini</strong> or <strong>Groq</strong>) over encrypted connections. This sharing only occurs when you initiate a prompt generation.</li>
-                <li><strong>Firebase (Google):</strong> Used exclusively to manage your user authentication and subscription lifecycle.</li>
+                <li><strong>Third-Party AI Processors (Google Gemini & Groq):</strong> To provide our core feature (AI prompt generation), the Extension transmits the extracted image data directly to the AI service you have actively selected. This data transmission only occurs when you explicitly initiate a generation task.</li>
+                <li><strong>Google Firebase:</strong> Used exclusively as our backend service provider to manage secure user authentication and subscription lifecycle data.</li>
             </ul>
         </section>
 
         <section>
-            <h2>5. Your Rights and Choices</h2>
+            <h2>5. Required Permissions Explanation</h2>
+            <p>To function, the Extension requires the following Chrome permissions, which are strictly limited to their intended purpose:</p>
+            <ul>
+                <li><code>activeTab</code> & <code>&lt;all_urls&gt;</code>: Required to read the DOM of the active page to extract the visible images and content when you request it.</li>
+                <li><code>scripting</code>: Required to inject the extraction script into the active page safely.</li>
+                <li><code>storage</code>: Required to save your settings and API keys locally on your device.</li>
+                <li><code>identity</code>: Required to enable secure "Continue with Google" login.</li>
+                <li><code>contextMenus</code>: Required to provide quick actions on right-click.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. Your Rights and Choices</h2>
             <p>You maintain full control over your data. You can:</p>
             <ul>
-                <li><strong>Revoke Access:</strong> Log out at any time within the Extension to remove your authentication token and stop account syncing.</li>
-                <li><strong>Clear Data:</strong> Clear your Chrome local storage or uninstall the Extension to permanently delete saved API keys and local settings.</li>
-                <li><strong>Request Deletion:</strong> You have the right to request the complete deletion of your user account and associated subscription data. Please contact us to fulfill this request.</li>
+                <li><strong>Revoke Access:</strong> Log out at any time within the Extension to remove your authentication token.</li>
+                <li><strong>Clear Data:</strong> Clear your Chrome extension storage or uninstall the Extension to permanently delete saved API keys and local settings.</li>
+                <li><strong>Request Deletion:</strong> You have the right to request the complete deletion of your user account and associated subscription data by contacting us.</li>
             </ul>
         </section>
 
         <section>
-            <h2>6. Contact Us</h2>
+            <h2>7. Contact Us</h2>
             <p>If you have any questions about this Privacy Policy, your data privacy, or need to request account deletion, please contact the developer at:</p>
             <p class="highlight"><strong>sr7aron@gmail.com</strong></p>
         </section>
