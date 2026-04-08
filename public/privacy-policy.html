@@ -9,8 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #4F46E5;
-            --primary-dark: #4338ca;
+            --primary: #4f46e5;
             --text-main: #1e293b;
             --text-muted: #64748b;
             --bg-body: #f8fafc;
@@ -35,7 +34,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 840px;
             margin: 0 auto;
             background: var(--bg-card);
             padding: 40px;
@@ -64,37 +63,40 @@
         }
 
         section {
-            margin-bottom: 30px;
+            margin-bottom: 28px;
         }
 
         h2 {
-            font-size: 1.4rem;
+            font-size: 1.35rem;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 14px;
             color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         h3 {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 600;
-            margin-top: 20px;
+            margin-top: 18px;
             margin-bottom: 10px;
         }
 
         p {
-            margin-bottom: 15px;
+            margin-bottom: 14px;
         }
 
         ul {
-            margin-bottom: 15px;
-            padding-left: 20px;
+            margin-bottom: 14px;
+            padding-left: 22px;
         }
 
         li {
             margin-bottom: 8px;
+        }
+
+        code {
+            background: #eef2ff;
+            border-radius: 4px;
+            padding: 1px 4px;
         }
 
         .highlight {
@@ -113,14 +115,11 @@
             color: var(--text-muted);
         }
 
-        strong {
-            color: var(--text-main);
-        }
-
         @media (max-width: 640px) {
             .container {
-                padding: 20px;
+                padding: 22px;
             }
+
             header h1 {
                 font-size: 1.6rem;
             }
@@ -132,80 +131,106 @@
         <header>
             <h1>Privacy Policy</h1>
             <p><strong>Scraper Prompt Generator</strong></p>
-            <p>Last Updated: April 1, 2026</p>
+            <p>Last Updated: April 8, 2026</p>
         </header>
 
         <section>
-            <p>This Privacy Policy describes how the <strong>"Scraper Prompt Generator"</strong> Chrome extension (the "Extension") collects, handles, stores, and shares your data. This policy is written to strictly comply with the Google Chrome Web Store Developer Program Policies.</p>
-            <p>By using this Extension, you agree to the collection and use of information in accordance with this policy.</p>
+            <p>This Privacy Policy explains how the <strong>"Scraper Prompt Generator"</strong> Chrome extension (the "Extension") collects, handles, stores, and shares user data. This policy applies to the live extension, the source package, and the build distributed for Chrome Web Store review.</p>
+            <p>The Extension is designed to minimize data collection and only access data needed to deliver user-requested features.</p>
         </section>
 
         <section>
-            <h2>1. Data Collection (What Information We Collect)</h2>
-            <p>The Extension limits the collection of data to what is strictly necessary to provide its core functionality. We collect:</p>
+            <h2>1. Data We Collect</h2>
+
+            <h3>1.1 Data You Provide</h3>
             <ul>
-                <li><strong>Website Content (Images & Metadata):</strong> We collect image URLs, alt texts, dimensions, and page titles from the active browser tab you are currently viewing. <em>This collection ONLY happens when you explicitly click "Scrape Images" or use the right-click context menu.</em></li>
-                <li><strong>Personal/Authentication Information:</strong> We collect your Email Address, Name, and Google User ID using Google's OAuth2 (chrome.identity) when you choose to log in.</li>
-                <li><strong>User-Provided Configuration:</strong> Any third-party API Keys (e.g., Gemini API Key, Groq API Key) that you manually input into the Extension's settings.</li>
-                <li><strong>Usage Statistics:</strong> We track the total number of images you process solely for the purpose of managing Freemium/Premium tier limits attached to your account.</li>
+                <li><strong>Google sign-in information:</strong> If you choose to sign in, the Extension uses <code>chrome.identity</code> and Firebase Authentication to process your email address, display name, Google account identifier, and authentication tokens.</li>
+                <li><strong>API keys you enter:</strong> If you add your own Gemini API key or Groq API key, the Extension stores those keys in Chrome extension storage so it can send requests to the provider you selected.</li>
+            </ul>
+
+            <h3>1.2 Data Collected When You Use the Core Features</h3>
+            <ul>
+                <li><strong>Page content you intentionally scrape:</strong> When you click "Scrape Images" or use the Extension's context menu, the Extension reads image URLs, image dimensions, image alt text when available, and limited page metadata such as the page title from the active tab.</li>
+                <li><strong>Images and prompt inputs you choose to process:</strong> If you upload an image or select scraped images for analysis, the selected image data and your prompt settings are processed so the Extension can generate prompts.</li>
+                <li><strong>Usage counter data:</strong> The Extension records account-related usage totals, such as image processing count, to enforce free-tier limits and determine premium access.</li>
+                <li><strong>Shutterstock Trends page integration:</strong> If you open the supported Shutterstock Trends page, the Extension may inject interface buttons on that page so you can send a keyword into the Extension workflow. This behavior is limited to the supported Trends page pattern.</li>
+            </ul>
+
+            <h3>1.3 Data We Do Not Collect for Our Own Servers</h3>
+            <ul>
+                <li>We do not collect or store your browsing history for advertising purposes.</li>
+                <li>We do not sell personal information or scraped website content.</li>
+                <li>We do not store your private Gemini or Groq API keys on our own backend servers.</li>
             </ul>
         </section>
 
         <section>
-            <h2>2. Data Handling (How We Handle Your Information)</h2>
-            <p>We handle your data securely and transparently:</p>
+            <h2>2. How We Handle and Use Data</h2>
             <ul>
-                <li><strong>Browser-Level Processing:</strong> Data extraction from web pages is handled entirely locally within your browser using the <code>activeTab</code> and <code>&lt;all_urls&gt;</code> host permissions. The Extension only requests and accesses page data when you consciously initiate an action on that specific tab.</li>
-                <li><strong>API Key Usage:</strong> The third-party API keys you provide are handled exclusively to authenticate your requests directly with your chosen AI provider (Google or Groq). They are not used for any background tracking or analytics.</li>
-                <li><strong>Temporary In-Memory Handling:</strong> Extracted image data is held temporarily in the browser's memory to be displayed to you and transmitted to the AI provider.</li>
+                <li><strong>Authentication:</strong> Sign-in data is used only to authenticate you, maintain your session, and associate your account with subscription and usage information.</li>
+                <li><strong>Prompt generation:</strong> Selected images, image URLs, and related prompt inputs are used only to generate AI prompts at your request.</li>
+                <li><strong>Feature delivery:</strong> Page content is accessed only after you trigger the feature on the current page or active tab.</li>
+                <li><strong>Account management:</strong> Email, name, usage count, and premium status are used to manage freemium and premium functionality.</li>
+                <li><strong>Settings persistence:</strong> API keys, language choice, provider choice, and similar settings are stored so the Extension can restore your preferences.</li>
             </ul>
         </section>
 
         <section>
-            <h2>3. Data Storage (Where Your Data is Stored)</h2>
-            <p>Our data storage practices are designed to maximize your privacy:</p>
+            <h2>3. Where Data Is Stored</h2>
             <ul>
-                <li><strong>Local Storage:</strong> Your third-party API Keys and Extension settings are stored strictly locally on your device using Chrome's <code>chrome.storage.local</code> API. <strong>We do not store your API keys on our servers.</strong></li>
-                <li><strong>Cloud Storage (Authentication only):</strong> Your user profile (email, name) and subscription usage statistics are stored securely on Google Firebase infrastructure to manage your account status.</li>
-                <li><strong>Zero Retention for Scraped Media:</strong> We <strong>do NOT</strong> store, save, or log the images, website content, or generated AI prompts on any of our own servers or databases at any time.</li>
+                <li><strong>Chrome extension storage:</strong> API keys and most user preferences are stored in <code>chrome.storage.sync</code>. Cached login flags and Firebase session tokens are stored in <code>chrome.storage.local</code>.</li>
+                <li><strong>Firebase / Firestore:</strong> Account records such as email address, display name, user ID, premium status, usage count, and account creation timestamp are stored on Google Firebase infrastructure.</li>
+                <li><strong>Temporary browser memory:</strong> Scraped image results, uploaded files, and generated prompt results may be held temporarily in the browser while the Extension is open and processing your request.</li>
             </ul>
         </section>
 
         <section>
-            <h2>4. Data Sharing (Who We Share Your Data With)</h2>
-            <p><strong>We DO NOT sell, rent, or trade your personal information, browsing history, or scraped data to any third parties.</strong></p>
-            <p>Your data is only shared with the following necessary service providers:</p>
+            <h2>4. Data Sharing and Disclosure</h2>
+            <p><strong>We do not sell, rent, or trade your personal data.</strong></p>
+            <p>Data is shared only when required to provide the feature you asked for:</p>
             <ul>
-                <li><strong>Third-Party AI Processors (Google Gemini & Groq):</strong> To provide our core feature (AI prompt generation), the Extension transmits the extracted image data directly to the AI service you have actively selected. This data transmission only occurs when you explicitly initiate a generation task.</li>
-                <li><strong>Google Firebase:</strong> Used exclusively as our backend service provider to manage secure user authentication and subscription lifecycle data.</li>
+                <li><strong>Google Gemini API:</strong> If you choose Gemini, selected image data and prompt content are sent directly to Google's AI API to generate results.</li>
+                <li><strong>Groq API:</strong> If you choose Groq, selected image data and prompt content are sent directly to Groq's API to generate results.</li>
+                <li><strong>Firebase services:</strong> Authentication data and account-related records are processed by Google Firebase and Firestore to manage login state, usage, and premium status.</li>
+            </ul>
+            <p>Scraped page content is not shared with unrelated third parties, and it is only transmitted to the AI provider you actively selected when you start a generation request.</p>
+        </section>
+
+        <section>
+            <h2>5. Data Retention</h2>
+            <ul>
+                <li><strong>Local settings and API keys:</strong> Remain in Chrome storage until you remove them, clear extension storage, or uninstall the Extension.</li>
+                <li><strong>Firebase account records:</strong> Remain in Firebase until you request deletion or we remove them for operational reasons.</li>
+                <li><strong>Temporary processing data:</strong> Scraped page data, uploaded files, and generated results are kept only as long as needed for the current session unless you save them yourself outside the Extension.</li>
             </ul>
         </section>
 
         <section>
-            <h2>5. Required Permissions Explanation</h2>
-            <p>To function, the Extension requires the following Chrome permissions, which are strictly limited to their intended purpose:</p>
+            <h2>6. Your Choices and Controls</h2>
             <ul>
-                <li><code>activeTab</code> & <code>&lt;all_urls&gt;</code>: Required to read the DOM of the active page to extract the visible images and content when you request it.</li>
-                <li><code>scripting</code>: Required to inject the extraction script into the active page safely.</li>
-                <li><code>storage</code>: Required to save your settings and API keys locally on your device.</li>
-                <li><code>identity</code>: Required to enable secure "Continue with Google" login.</li>
-                <li><code>contextMenus</code>: Required to provide quick actions on right-click.</li>
+                <li><strong>Do not sign in:</strong> You can choose not to use Google sign-in features.</li>
+                <li><strong>Remove API keys:</strong> You can delete saved API keys from the Extension settings.</li>
+                <li><strong>Clear local data:</strong> You can clear Chrome extension storage or uninstall the Extension to remove locally stored settings and tokens.</li>
+                <li><strong>Request account deletion:</strong> You can request deletion of your Firebase account record and related account data by contacting us.</li>
             </ul>
         </section>
 
         <section>
-            <h2>6. Your Rights and Choices</h2>
-            <p>You maintain full control over your data. You can:</p>
+            <h2>7. Chrome Permissions Used</h2>
             <ul>
-                <li><strong>Revoke Access:</strong> Log out at any time within the Extension to remove your authentication token.</li>
-                <li><strong>Clear Data:</strong> Clear your Chrome extension storage or uninstall the Extension to permanently delete saved API keys and local settings.</li>
-                <li><strong>Request Deletion:</strong> You have the right to request the complete deletion of your user account and associated subscription data by contacting us.</li>
+                <li><code>activeTab</code>: Used to access the current page only when you trigger scraping or analysis.</li>
+                <li><code>&lt;all_urls&gt;</code>: Used so the Extension can work on pages you choose to analyze.</li>
+                <li><code>scripting</code>: Used to inject the extraction logic into the current page at your request.</li>
+                <li><code>storage</code>: Used to store settings, API keys, login flags, and local session data.</li>
+                <li><code>identity</code>: Used to support secure Google sign-in.</li>
+                <li><code>contextMenus</code>: Used to add the right-click action for starting scraping.</li>
+                <li><code>sidePanel</code>: Used to show the Extension interface in the Chrome side panel.</li>
             </ul>
         </section>
 
         <section>
-            <h2>7. Contact Us</h2>
-            <p>If you have any questions about this Privacy Policy, your data privacy, or need to request account deletion, please contact the developer at:</p>
+            <h2>8. Contact</h2>
+            <p>If you have questions about this Privacy Policy or want to request deletion of your account data, contact:</p>
             <p class="highlight"><strong>sr7aron@gmail.com</strong></p>
         </section>
 
