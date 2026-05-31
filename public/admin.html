@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lynk.id Webhook Hub — Dashboard admin untuk routing webhook ke berbagai proyek.">
+    <title>Webhook Hub — Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- ═══ LOGIN SCREEN ══════════════════════════════════════════════════ -->
+    <div id="login-screen">
+        <div class="login-card">
+            <div style="font-size:2.5rem;margin-bottom:12px">🔗</div>
+            <h1>Webhook Hub</h1>
+            <p>Masukkan password admin untuk mengakses dashboard</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Admin password..." autocomplete="current-password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full" id="login-btn">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ═══ DASHBOARD ═════════════════════════════════════════════════════ -->
+    <div id="dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-brand">
+                <div class="icon">🔗</div>
+                <span>Webhook Hub</span>
+            </div>
+            <div class="header-actions">
+                <span id="last-webhook" style="font-size:0.78rem;color:var(--text-muted)"></span>
+                <button class="btn btn-secondary btn-sm" onclick="loadStats(); loadCurrentTab();">🔄 Refresh</button>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">Keluar</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Rules Aktif</div>
+                    <div class="stat-value" id="stat-rules">—</div>
+                    <div class="stat-sub" id="stat-rules-sub"></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Webhook Terbaru</div>
+                    <div class="stat-value" id="stat-logs">—</div>
+                    <div class="stat-sub">50 terakhir</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Sukses</div>
+                    <div class="stat-value" id="stat-success">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Gagal</div>
+                    <div class="stat-value" id="stat-fail">—</div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="rules" onclick="switchTab('rules')">📡 Routing Rules</button>
+                <button class="tab-btn" data-tab="logs" onclick="switchTab('logs')">📋 Webhook Logs</button>
+            </div>
+
+            <!-- Tab: Rules -->
+            <div class="tab-content active" id="tab-rules">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Routing Rules</h3>
+                        <button class="btn btn-primary btn-sm" onclick="openRuleModal()">+ Tambah Rule</button>
+                    </div>
+                    <div id="rules-table-body">
+                        <div class="empty-state"><div class="icon">📡</div><p>Memuat data...</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab: Logs -->
+            <div class="tab-content" id="tab-logs">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Webhook Logs</h3>
+                        <div class="filter-bar">
+                            <button class="filter-btn active" data-filter="ALL" onclick="filterLogs('ALL')">Semua</button>
+                            <button class="filter-btn" data-filter="SUCCESS" onclick="filterLogs('SUCCESS')">✅ Sukses</button>
+                            <button class="filter-btn" data-filter="PARTIAL_FAIL" onclick="filterLogs('PARTIAL_FAIL')">⚠️ Gagal</button>
+                            <button class="filter-btn" data-filter="NO_RULES" onclick="filterLogs('NO_RULES')">📭 No Rules</button>
+                        </div>
+                    </div>
+                    <div id="logs-table-body">
+                        <div class="empty-state"><div class="icon">📋</div><p>Memuat data...</p></div>
+                    </div>
+                </div>
+                <div id="log-detail"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ═══ MODAL: CREATE/EDIT RULE ═══════════════════════════════════════ -->
+    <div class="modal-overlay" id="rule-modal">
+        <div class="modal">
+            <h2 id="rule-modal-title">Tambah Rule Baru</h2>
+            <form id="rule-form">
+                <input type="hidden" id="rule-id">
+                <div class="form-group">
+                    <label for="rule-name">Nama Rule *</label>
+                    <input type="text" id="rule-name" placeholder="Misal: Gemini Prompter Premium" required>
+                </div>
+                <div class="form-group">
+                    <label for="rule-product-id">Product ID (Lynk.id UUID)</label>
+                    <input type="text" id="rule-product-id" placeholder="Kosongkan untuk catch-all (semua produk)">
+                </div>
+                <div class="form-group">
+                    <label for="rule-url">URL Tujuan *</label>
+                    <input type="url" id="rule-url" placeholder="https://proyek-anda.com/api/webhook" required>
+                </div>
+                <div class="form-group">
+                    <label for="rule-headers">Custom Headers (JSON, opsional)</label>
+                    <textarea id="rule-headers" placeholder='{"Authorization": "Bearer xxx"}'></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="rule-description">Deskripsi (opsional)</label>
+                    <input type="text" id="rule-description" placeholder="Catatan singkat tentang rule ini">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeRuleModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="rule-submit-btn">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

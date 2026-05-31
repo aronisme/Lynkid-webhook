@@ -11,3 +11,7 @@
 # ── Webhook Lynk.id ───────────────────────────────────────────────────────────
 # Endpoint: POST https://[domain-netlify].netlify.app/.netlify/functions/lynk-webhook
 # Daftarkan URL ini di dashboard Lynk.id -> Settings -> Webhook
+
+# ── Admin API ─────────────────────────────────────────────────────────────────
+# Dashboard: https://[domain-netlify].netlify.app/admin.html
+# API:       https://[domain-netlify].netlify.app/.netlify/functions/api-admin?action=...
