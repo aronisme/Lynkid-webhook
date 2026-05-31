@@ -119,6 +119,7 @@ function loadCurrentTab() {
     const active = document.querySelector('.tab-btn.active');
     if (active?.dataset.tab === 'rules') loadRules();
     else if (active?.dataset.tab === 'logs') loadLogs();
+    else if (active?.dataset.tab === 'incoming') loadIncoming();
 }
 
 // ─── ROUTING RULES ─────────────────────────────────────────────────────────────
@@ -355,6 +356,71 @@ async function resendLog(logId) {
     } catch (err) {
         toast(`Resend gagal: ${err.message}`, 'error');
     }
+}
+
+// ─── INCOMING DATA (RAW JSON VIEWER) ───────────────────────────────────────────
+async function loadIncoming() {
+    const container = document.getElementById('incoming-feed');
+    const limit = document.getElementById('incoming-limit')?.value || '10';
+    container.innerHTML = '<div class="empty-state"><div class="spinner"></div><p>Memuat data...</p></div>';
+
+    try {
+        const { logs } = await apiCall('getLogs', { params: { status: 'ALL', limit } });
+        if (!logs.length) {
+            container.innerHTML = '<div class="empty-state"><div class="icon">📥</div><p>Belum ada data webhook masuk.</p></div>';
+            return;
+        }
+
+        // Fetch full detail for each log to get rawPayload
+        const details = await Promise.all(
+            logs.map(log => apiCall('getLog', { params: { id: log.id } }).then(r => r.log).catch(() => null))
+        );
+
+        container.innerHTML = details.filter(Boolean).map(log => {
+            const statusClass = log.status === 'SUCCESS' ? 'success' : log.status === 'NO_RULES' ? 'warning' : 'danger';
+            const products = (log.productNames || []).join(', ') || 'Unknown';
+            return `
+                <div class="incoming-card">
+                    <div class="incoming-card-header">
+                        <div class="incoming-meta">
+                            <span class="badge badge-${statusClass}">${log.status}</span>
+                            <strong>${esc(products)}</strong>
+                            <span style="color:var(--text-muted)">•</span>
+                            <span style="color:var(--text-secondary);font-size:0.78rem">${esc(log.customerEmail || '—')}</span>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px">
+                            <span style="font-size:0.75rem;color:var(--text-muted)">${formatDate(log.createdAtISO)}</span>
+                            <button class="btn btn-secondary btn-sm" onclick="copyPayload(this)" title="Copy JSON">📋</button>
+                        </div>
+                    </div>
+                    <div class="payload-box">${syntaxHighlight(log.rawPayload)}</div>
+                </div>`;
+        }).join('');
+    } catch (err) {
+        container.innerHTML = `<div class="empty-state"><p style="color:var(--danger)">Error: ${err.message}</p></div>`;
+    }
+}
+
+function syntaxHighlight(json) {
+    const str = JSON.stringify(json, null, 2);
+    return esc(str).replace(
+        /("[^"]+")(:)/g, '<span style="color:#a78bfa">$1</span><span style="color:var(--text-muted)">$2</span>'
+    ).replace(
+        /: ("[^"]*")/g, ': <span style="color:#34d399">$1</span>'
+    ).replace(
+        /: (\d+)/g, ': <span style="color:#fbbf24">$1</span>'
+    ).replace(
+        /: (true|false|null)/g, ': <span style="color:#f87171">$1</span>'
+    );
+}
+
+function copyPayload(btn) {
+    const box = btn.closest('.incoming-card').querySelector('.payload-box');
+    navigator.clipboard.writeText(box.textContent).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = '✅';
+        setTimeout(() => btn.textContent = orig, 1500);
+    });
 }
 
 // ─── UTILS ─────────────────────────────────────────────────────────────────────

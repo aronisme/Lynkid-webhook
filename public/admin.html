@@ -70,6 +70,7 @@
             <div class="tabs">
                 <button class="tab-btn active" data-tab="rules" onclick="switchTab('rules')">📡 Routing Rules</button>
                 <button class="tab-btn" data-tab="logs" onclick="switchTab('logs')">📋 Webhook Logs</button>
+                <button class="tab-btn" data-tab="incoming" onclick="switchTab('incoming')">📥 Incoming Data</button>
             </div>
 
             <!-- Tab: Rules -->
@@ -102,6 +103,26 @@
                     </div>
                 </div>
                 <div id="log-detail"></div>
+            </div>
+
+            <!-- Tab: Incoming Data -->
+            <div class="tab-content" id="tab-incoming">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>📥 Data Masuk dari Lynk.id</h3>
+                        <div style="display:flex;gap:8px;align-items:center">
+                            <select id="incoming-limit" style="width:auto;padding:6px 10px;font-size:0.78rem" onchange="loadIncoming()">
+                                <option value="5">5 terbaru</option>
+                                <option value="10" selected>10 terbaru</option>
+                                <option value="25">25 terbaru</option>
+                            </select>
+                            <button class="btn btn-secondary btn-sm" onclick="loadIncoming()">🔄 Refresh</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="incoming-feed">
+                    <div class="empty-state"><div class="icon">📥</div><p>Memuat data...</p></div>
+                </div>
             </div>
         </main>
     </div>
