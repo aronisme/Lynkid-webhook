@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dokumentasi API Webhook Hub">
+    <title>Webhook Hub — Dokumentasi Integrasi</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔗</text></svg>">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap');
+
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #e8e8f0;
+            --text-secondary: #8888a8;
+            --accent: #8b5cf6;
+            --success: #34d399;
+            --info: #60a5fa;
+            --radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at top right, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom left, rgba(96, 165, 250, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        header {
+            margin-bottom: 48px;
+            border-bottom: 1px solid var(--border-glass);
+            padding-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin: 0 0 12px 0;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin: 40px 0 16px 0;
+            color: var(--text-primary);
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            margin: 24px 0 12px 0;
+            color: var(--text-secondary);
+        }
+
+        p, li {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(12px);
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-glass);
+            border-radius: 8px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: var(--info);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .property-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .property-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .property-list li:last-child {
+            border-bottom: none;
+        }
+
+        .prop-name {
+            font-family: 'Fira Code', monospace;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .prop-type {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="font-size: 3rem; margin-bottom: 16px;">📚</div>
+            <h1>Dokumentasi Integrasi Webhook</h1>
+            <p>Panduan bagi developer untuk menerima dan memproses data dari Webhook Hub.</p>
+        </header>
+
+        <section>
+            <h2>1. Pengantar</h2>
+            <p>Webhook Hub bertindak sebagai penerus (router). Ketika transaksi berhasil terjadi di Lynk.id, Webhook Hub menerima data tersebut dan meneruskannya (HTTP POST) ke URL Proyek Anda berdasarkan <strong>Routing Rules</strong> yang telah dikonfigurasi.</p>
+            <div class="card">
+                <p><strong>Penting:</strong> Payload yang dikirimkan oleh Webhook Hub adalah <strong>persis sama (passthrough)</strong> dengan payload asli dari Lynk.id. Signature validation telah dilakukan oleh Hub, sehingga server tujuan Anda tidak perlu melakukan validasi signature lagi.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>2. Request Format</h2>
+            <p>Webhook Hub akan mengirimkan HTTP POST request ke endpoint (URL Tujuan) Anda.</p>
+            
+            <h3>HTTP Headers</h3>
+            <div class="card">
+                <ul class="property-list">
+                    <li>
+                        <div><span class="prop-name">Content-Type</span> <span class="prop-type">string</span></div>
+                        Selalu <code>application/json</code>
+                    </li>
+                    <li>
+                        <div><span class="prop-name">User-Agent</span> <span class="prop-type">string</span></div>
+                        Selalu <code>LynkidWebhookHub/1.0</code>
+                    </li>
+                    <li>
+                        <div><span class="prop-name">X-Webhook-Source</span> <span class="prop-type">string</span></div>
+                        Selalu <code>lynkid-hub</code>. Bisa digunakan untuk memverifikasi sumber request.
+                    </li>
+                    <li>
+                        <div><span class="prop-name">X-Webhook-Resend</span> <span class="prop-type">boolean</span></div>
+                        Bernilai <code>true</code> jika request ini adalah hasil klik tombol "Resend" secara manual di Dashboard. Jika webhook asli, header ini tidak ada.
+                    </li>
+                    <li>
+                        <div><span class="prop-name">(Custom Headers)</span></div>
+                        Header tambahan apapun yang Anda definisikan di pengaturan Rule (misal: <code>Authorization: Bearer token123</code>).
+                    </li>
+                </ul>
+            </div>
+
+            <h3>Body (JSON Payload)</h3>
+            <p>Struktur di bawah ini adalah format standar dari Lynk.id.</p>
+            <div class="card">
+<pre>{
+  "event": "payment.received",
+  "data": {
+    "message_action": "SUCCESS",
+    "message_code": "0",
+    "message_id": "API_CALL_...",
+    "message_data": {
+      "refId": "412039de85...",
+      "createdAt": "2026-03-22T05:09:37",
+      "customer": {
+        "email": "pembeli@email.com",
+        "name": "Nama Pembeli",
+        "phone": "08123456789"
+      },
+      "items": [
+        {
+          "uuid": "69bf16671a403958...",
+          "title": "Nama Produk",
+          "price": 100000,
+          "qty": 1
+        }
+      ],
+      "totals": {
+        "grandTotal": 100000,
+        "customerPay": 100000
+      }
+    }
+  }
+}</pre>
+            </div>
+            
+            <p><strong>Field Penting yang Biasa Digunakan:</strong></p>
+            <ul style="margin-top: 12px; margin-bottom: 24px;">
+                <li><code>data.message_data.customer.email</code>: Email pembeli untuk aktivasi akun/layanan.</li>
+                <li><code>data.message_data.items[0].uuid</code>: ID Produk unik dari Lynk.id untuk verifikasi produk apa yang dibeli.</li>
+                <li><code>data.message_data.refId</code>: Referensi transaksi unik.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>3. Contoh Implementasi Penerima (Receiver)</h2>
+            <p>Berikut adalah contoh kode menggunakan Node.js (Express) untuk menerima webhook dari Hub.</p>
+            <div class="card">
+<pre>const express = require('express');
+const app = express();
+
+// Parse JSON body
+app.use(express.json());
+
+// Endpoint yang didaftarkan di Webhook Hub (URL Tujuan)
+app.post('/api/webhook/lynkid', async (req, res) => {
+    // 1. Verifikasi sumber request (Opsional, tapi direkomendasikan)
+    if (req.headers['x-webhook-source'] !== 'lynkid-hub') {
+        return res.status(403).json({ error: 'Unauthorized source' });
+    }
+
+    // (Opsional) Verifikasi custom token jika Anda setel di Rule Headers
+    // if (req.headers['authorization'] !== 'Bearer secret_token') ...
+
+    const payload = req.body;
+
+    // 2. Pastikan ini adalah event sukses
+    if (payload.event !== 'payment.received' || payload.data.message_action !== 'SUCCESS') {
+        return res.status(200).send('Ignored non-success event');
+    }
+
+    try {
+        const customerEmail = payload.data.message_data.customer.email;
+        const items = payload.data.message_data.items;
+        const refId = payload.data.message_data.refId;
+        
+        console.log(`[Webhook] Menerima pembayaran dari ${customerEmail} (Ref: ${refId})`);
+
+        // 3. Proses aktivasi produk
+        for (const item of items) {
+            console.log(`Mengaktifkan produk: ${item.title} (UUID: ${item.uuid})`);
+            
+            // TODO: Logika database/aplikasi Anda disini
+            // await activateUserPremium(customerEmail, item.uuid);
+        }
+
+        // 4. Selalu respon dengan 200 OK agar Hub tahu pengiriman berhasil
+        return res.status(200).json({ success: true, message: 'Webhook processed' });
+
+    } catch (error) {
+        console.error('Webhook error:', error);
+        // Respon dengan 500 akan membuat Hub mencatat status FAILED
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+app.listen(3000, () => console.log('Receiver berjalan di port 3000'));</pre>
+            </div>
+        </section>
+
+        <section>
+            <h2>4. Tanya Jawab (FAQ)</h2>
+            <div class="card">
+                <h3 style="margin-top: 0;">Apa yang terjadi jika server saya down (merespon 500 atau timeout)?</h3>
+                <p>Hub akan mencatat status pengiriman sebagai <strong>FAILED</strong> atau <strong>PARTIAL_FAIL</strong>. Webhook tidak akan dicoba ulang secara otomatis, namun admin dapat masuk ke Dashboard Hub dan menekan tombol <strong>Resend</strong> secara manual kapan saja.</p>
+
+                <h3>Berapa lama batas waktu (timeout) request?</h3>
+                <p>Hub menunggu maksimal <strong>15 detik</strong>. Jika server tujuan Anda butuh waktu proses lebih lama dari itu, sangat disarankan agar server Anda membalas <code>200 OK</code> terlebih dahulu secepatnya, dan memproses data di <i>background</i>.</p>
+            </div>
+        </section>
+        
+        <footer style="margin-top: 60px; text-align: center; border-top: 1px solid var(--border-glass); padding-top: 24px; color: var(--text-muted); font-size: 0.85rem;">
+            &copy; 2026 Webhook Hub Documentation
+        </footer>
+    </div>
+</body>
+</html>
